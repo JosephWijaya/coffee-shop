@@ -58,6 +58,9 @@ const Login = () => {
           p: "24px",
           m: "auto",
           gap: "36px",
+          "@media (max-width:426px)": {
+            width: "100%",
+          },
         }}
       >
         <Container
@@ -67,6 +70,11 @@ const Login = () => {
             mt: "24px",
             gap: "12px",
             justifyContent: "center",
+            "@media (max-width:426px)": {
+              width: "auto",
+              flexDirection: "column",
+              mt: 0,
+            },
           }}
         >
           <img
@@ -78,7 +86,16 @@ const Login = () => {
               alignSelf: "center",
             }}
           />
-          <Typography variant="h4">Tjendana Coffee</Typography>
+          <Typography
+            variant="h4"
+            sx={{
+              "@media (max-width:426px)": {
+                textAlign: "center",
+              },
+            }}
+          >
+            Tjendana Coffee
+          </Typography>
         </Container>
         <Container
           sx={{
@@ -92,7 +109,11 @@ const Login = () => {
             value={email}
             onChange={handleChangeEmail}
             placeholder="email"
-            sx={{ width: "350px", alignSelf: "center" }}
+            sx={{ width: "350px", alignSelf: "center",
+              "@media (max-width:426px)": {
+                width: "100%",
+              },
+            }}
             error={!!error}
             helperText={error}
           />
@@ -117,6 +138,9 @@ const Login = () => {
               cursor: "pointer",
               "&:hover": {
                 backgroundColor: "#685252",
+              },
+              "@media (max-width:426px)": {
+                width: "100%",
               },
             }}
           >

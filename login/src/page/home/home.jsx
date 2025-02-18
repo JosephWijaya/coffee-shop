@@ -29,6 +29,9 @@ const Home = () => {
           p: "24px",
           m: "auto",
           gap: "36px",
+          "@media (max-width:426px)": {
+            width: "100%",
+          },
         }}
       >
         <Container
@@ -38,6 +41,11 @@ const Home = () => {
             mt: "24px",
             gap: "12px",
             justifyContent: "center",
+            "@media (max-width:426px)": {
+              width: "auto",
+              flexDirection: "column",
+              mt: 0,
+            },
           }}
         >
           <img
@@ -49,7 +57,16 @@ const Home = () => {
               alignSelf: "center",
             }}
           />
-          <Typography variant="h4">Tjendana Coffee</Typography>
+          <Typography
+            variant="h4"
+            sx={{
+              "@media (max-width:426px)": {
+                textAlign: "center",
+              },
+            }}
+          >
+            Tjendana Coffee
+          </Typography>
         </Container>
 
         <Container
@@ -60,7 +77,14 @@ const Home = () => {
             gap: "16px",
           }}
         >
-          <Typography variant="h5">Authentication Successful!</Typography>
+          <Typography
+            variant="h5"
+            sx={{
+              textAlign: "center",
+            }}
+          >
+            Authentication Successful!
+          </Typography>
           <Typography variant="h6">email : {email}</Typography>
           <Typography variant="h6">token : {token}</Typography>
         </Container>
@@ -84,6 +108,9 @@ const Home = () => {
               cursor: "pointer",
               "&:hover": {
                 backgroundColor: "#685252",
+              },
+              "@media (max-width:426px)": {
+                width: "100%",
               },
             }}
           >

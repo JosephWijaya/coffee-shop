@@ -14,7 +14,7 @@ const Home = () => {
   return (
     <div>
       <Navbar />
-      <Navigate to={ROUTE.HOME+ROUTE.ITEM} replace/>
+      {/* <Navigate to={ROUTE.HOME+ROUTE.ITEM} replace/> */}
       <Outlet /> {/* This will render the routed content */}
     </div>
     // <Container

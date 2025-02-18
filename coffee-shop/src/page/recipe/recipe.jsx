@@ -22,7 +22,7 @@ import DialogItem from "../../component/dialog-item";
 import { itemAction } from "../../store/itemReducer";
 import DialogDeleteItem from "../../component/dialog-delete-item";
 
-const Item = () => {
+const Recipe = () => {
   const dispatch = useDispatch();
   const { item } = useSelector((state) => state.item);
   const [search, setSearch] = useState("");
@@ -210,7 +210,7 @@ const Item = () => {
           Add item
         </Button>
       </Container>
-      <Paper
+      {/* <Paper
         elevation={3}
         sx={{
           width: "100%",
@@ -293,7 +293,7 @@ const Item = () => {
             overflow:"hidden"
           }}
         />
-      </Paper>
+      </Paper> */}
       <DialogItem
         isOpen={openChange}
         data={update}
@@ -311,4 +311,4 @@ const Item = () => {
   );
 };
 
-export default Item;
+export default Recipe;

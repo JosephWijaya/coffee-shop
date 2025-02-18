@@ -5,4 +5,5 @@ export const ROUTE = Object.freeze({
   VALIDATE: "/validate",
   HOME: "/",
   ITEM: "item",
+  RECIPE: "recipe",
 });

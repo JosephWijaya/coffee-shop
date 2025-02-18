@@ -7,6 +7,7 @@ import Login from "./page/login/Login";
 import MagicLink from "./page/magic-link/magic-link";
 import Home from "./page/home/home";
 import Item from "./page/item/item";
+import Recipe from "./page/recipe/recipe";
 
 function App() {
   const navigate = useNavigate();
@@ -22,10 +23,11 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path={ROUTE.LOGIN} element={<Login />} exact />
-        <Route path={ROUTE.VALIDATE} element={<MagicLink />} exact />
-        <Route path={ROUTE.HOME} element={<Home />} exact>
-          <Route path={ROUTE.ITEM} element={<Item />} exact />
+        <Route path={ROUTE.LOGIN} element={<Login />} />
+        <Route path={ROUTE.VALIDATE} element={<MagicLink />} />
+        <Route path={ROUTE.HOME} element={<Home />}>
+          <Route path={ROUTE.ITEM} element={<Item />} />
+          <Route path={ROUTE.RECIPE} element={<Recipe />} />
           <Route index element={<Navigate to={ROUTE.ITEM}/>} replace />
         </Route>
       </Routes>

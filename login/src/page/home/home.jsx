@@ -1,41 +1,12 @@
-import { useCallback, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import logo from "../../asset/logo.png";
-import { TextField, Button, Container, Paper, Typography } from "@mui/material";
-import { ROUTE } from "../../constant/route";
+import { Button, Container, Paper, Typography } from "@mui/material";
 import { authAction } from "../../store/authReducer";
 
-const Login = () => {
+const Home = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-
-  const handleChangeEmail = (e) => {
-    const value = e.target.value;
-    setEmail(value);
-  };
-
-  const handleSubmit = useCallback(
-    (e) => {
-      e.preventDefault();
-
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (email.length > 3) {
-        if (!emailRegex.test(email)) {
-          setError("Email tidak valid");
-        } else {
-          setError("");
-          dispatch(authAction.addEmaiL(email));
-          navigate(ROUTE.VALIDATE);
-        }
-      } else {
-        setError("Email tidak valid");
-      }
-    },
-    [email]
-  );
+  const { email, token } = useSelector((state) => state.auth);
 
   return (
     <Container
@@ -80,6 +51,7 @@ const Login = () => {
           />
           <Typography variant="h4">Tjendana Coffee</Typography>
         </Container>
+
         <Container
           sx={{
             display: "flex",
@@ -88,14 +60,9 @@ const Login = () => {
             gap: "16px",
           }}
         >
-          <TextField
-            value={email}
-            onChange={handleChangeEmail}
-            placeholder="email"
-            sx={{ width: "350px", alignSelf: "center" }}
-            error={!!error}
-            helperText={error}
-          />
+          <Typography variant="h5">Authentication Successful!</Typography>
+          <Typography variant="h6">email : {email}</Typography>
+          <Typography variant="h6">token : {token}</Typography>
         </Container>
         <Container
           sx={{
@@ -105,7 +72,7 @@ const Login = () => {
         >
           <Button
             variant="primary"
-            onClick={handleSubmit}
+            onClick={() => dispatch(authAction.logout())}
             sx={{
               width: "350px",
               p: "12px 20px",
@@ -120,7 +87,7 @@ const Login = () => {
               },
             }}
           >
-            Login by Magic Link
+            Logout
           </Button>
         </Container>
       </Paper>
@@ -128,4 +95,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Home;

@@ -1,20 +1,15 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import style from "./magic-link.module.css";
 import logo from "../../asset/logo.png";
-import Button from "@mui/material/Button";
-// import {
-//   Button,
-// } from "@mui/material";
+import { Button, Container, Paper, Typography } from "@mui/material";
+import { authAction } from "../../store/authReducer";
+import { ROUTE } from "../../constant/route";
+import { useNavigate } from "react-router-dom";
 
 const MagicLink = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const {isAuth, email, token} = useSelector((state) => state.auth)
-  const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-  const [passwd, setPasswd] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [token, setToken] = useState(false);
+  const [token, setToken] = useState("");
 
   const generateRandomizeString = () => {
     const characters =
@@ -27,43 +22,85 @@ const MagicLink = () => {
     }
 
     setToken(result);
-    console.log(result);
+    dispatch(authAction.addToken(result));
   };
 
   const handleSubmit = () => {
-    console.log("Submit");
+    generateRandomizeString();
+    navigate(ROUTE.HOME);
   };
 
   return (
-    <>
-      <div className={style.canvas}>
-        <div className={style.container}>
-          <div className={style.header}>
-            <img alt="logo" src={logo} />
-            <h2>Tjendana</h2>
-          </div>
-
-          <div className={style.footer}>
-            <Button
-              variant="primary"
-              onClick={handleSubmit}
-              style={{
-                width: 350,
-                padding: "12px 20px",
-                fontSize: "16px",
+    <Container
+      sx={{
+        width: "100vw",
+        height: "100vh",
+        display: "flex",
+        backgroundColor: "#ebebebeb",
+      }}
+    >
+      <Paper
+        sx={{
+          maxWidth: 400,
+          display: "flex",
+          flexDirection: "column",
+          alignSelf: "center",
+          backgroundColor: "#f9ffff",
+          border: "1px solid #646464",
+          borderRadius: "12px",
+          p: "24px",
+          m: "auto",
+          gap: "36px",
+        }}
+      >
+        <Container
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            mt: "24px",
+            gap: "12px",
+            justifyContent: "center",
+          }}
+        >
+          <img
+            alt="logo"
+            src={logo}
+            style={{
+              width: "50px",
+              height: "35px",
+              alignSelf: "center",
+            }}
+          />
+          <Typography variant="h4">Tjendana Coffee</Typography>
+        </Container>
+        <Container
+          sx={{
+            display: "flex",
+            alignSelf: "center",
+          }}
+        >
+          <Button
+            variant="primary"
+            onClick={handleSubmit}
+            sx={{
+              width: "350px",
+              p: "12px 20px",
+              fontSize: "16px",
+              backgroundColor: "#8d6767",
+              color: "#fff",
+              borderRadius: "4px",
+              border: "none",
+              cursor: "pointer",
+              "&:hover": {
                 backgroundColor: "#685252",
-                color: "#fff",
-                borderRadius: "4px",
-                border: "none",
-                cursor: "pointer",
-              }}
-            >
-              Submit
-            </Button>
-          </div>
-        </div>
-      </div>
-    </>
+              },
+            }}
+          >
+            Magic Link
+          </Button>
+        </Container>
+      </Paper>
+    </Container>
   );
 };
 

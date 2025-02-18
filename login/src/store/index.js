@@ -1,6 +1,6 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
-import authReducer from "./reducer/authReducer/authReducer";
+import authReducer from "./authReducer";
 import localforage from "localforage";
 
 const rootReducer = combineReducers({

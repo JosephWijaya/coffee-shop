@@ -87,7 +87,6 @@ const Item = () => {
     );
     setFilteredItem(data);
     currentItems(data);
-    console.log(data);
   };
 
   const handleDialogChange = (status, data) => {

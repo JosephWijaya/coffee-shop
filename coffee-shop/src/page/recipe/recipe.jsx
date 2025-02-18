@@ -22,111 +22,97 @@ import DialogItem from "../../component/dialog-item";
 import { itemAction } from "../../store/itemReducer";
 import DialogDeleteItem from "../../component/dialog-delete-item";
 
+// TODO: Melakukan Calculate dan TidyUP 
+
 const Recipe = () => {
   const dispatch = useDispatch();
   const { item } = useSelector((state) => state.item);
-  const [search, setSearch] = useState("");
-  const [action, setAction] = useState("");
-  const [openChange, setOpenChange] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false);
-  const [update, setUpdate] = useState({});
-  const [filteredItem, setFilteredItem] = useState(item);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [currentItem, setCurrentItem] = useState();
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [order, setOrder] = useState(2);
+  const [data, setData] = useState([]);
+  const recipe = [15, 150, 20, 1, 20, 50];
 
   useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
+    setData([]);
+    console.log(item);
+    let uom = "";
+    let qty,
+      pcs,
+      qty_recipe = 0;
+    const data = item.map((list, idx) => {
+      if (list.uom === "kg") {
+        uom = "g";
+        qty = list.qty * 1000;
+        pcs = 1000;
+      } else if (list.uom === "liter") {
+        uom = "ml";
+        qty = list.qty * 1000;
+        pcs = 1000;
+      } else {
+        uom = list.uom;
+        qty = list.qty;
+        pcs = 1;
+      }
+      return {
+        item_name: list.item_name,
+        qty_stock: qty,
+        qty_recipe: recipe[idx],
+        qty_used: recipe[idx] * order,
+        uom: uom,
+        price: recipe[idx] * order * (list.price / pcs),
+      };
+    });
+    setData(data);
+  }, [item]);
 
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  const handleChangeOrder = (e) => {
+    setOrder(e.target.value);
+  };
+
+  const handleChangeData = (e, data) => {
+    const value = e.target.value;
+    console.log(data, data.idx, value);
+    if (data.field === "recipe") {
+      if (value === "" || /^[0-9]*$/.test(value)) {
+        assignData(data.idx, { qty_recipe: value });
+      }
+    }
+  };
+
+  const assignData = (idx, newData) => {
+    console.log(newData);
+    const updatedItems = data.map((item, i) => {
+      if (i === idx) {
+        return { ...item, ...newData }; // Update the specific item
+      }
+      return item; // Return the item unchanged
+    });
+    console.log(updatedItems);
+    setData(updatedItems);
+  };
+
+  const calculate = () => {
+    console.log("CALCULATE");
+  };
+  //   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  //   useEffect(() => {
+  //     const handleResize = () => {
+  //       setWindowWidth(window.innerWidth);
+  //     };
+
+  //     window.addEventListener("resize", handleResize);
+  //     return () => {
+  //       window.removeEventListener("resize", handleResize);
+  //     };
+  //   }, []);
 
   // Define styles based on window width
-  const iconStyle = {
-    width: windowWidth > 555 ? "30px" : windowWidth > 425 ? "25px" : "20px",
-    height: "auto",
-    alignSelf: "center",
-    cursor: "pointer",
-  };
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset to the first page
-  };
-
-  useEffect(() => {
-    handleSearch();
-  }, [item, search, page, rowsPerPage]);
-
-  const currentItems = (items) => {
-    const data = items.slice(
-      page * rowsPerPage,
-      page * rowsPerPage + rowsPerPage
-    );
-    setCurrentItem(data);
-  };
-
-  const handleChangeSearch = (e) => {
-    const value = e.target.value;
-    setSearch(value);
-  };
-
-  const handleSearch = () => {
-    const data = item.filter((list) =>
-      list.item_name.toLowerCase().includes(search.toLowerCase())
-    );
-    setFilteredItem(data);
-    currentItems(data);
-    console.log(data);
-  };
-
-  const handleDialogChange = (status, data) => {
-    setAction(status);
-    setOpenChange(!openChange);
-    if (status === "EDIT") {
-      setUpdate(data);
-    } else {
-      setUpdate(null);
-    }
-  };
-
-  const handleDialogDelete = (data) => {
-    if (!openDelete) {
-      setOpenDelete(true);
-      setUpdate(data);
-    } else {
-      setUpdate({});
-      setOpenDelete(false);
-    }
-  };
-
-  const handleDelete = (status, data) => {
-    if (status) {
-      dispatch(itemAction.deleteItem(data));
-    }
-  };
-
-  const handleSubmit = (data) => {
-    let id = -1;
-    if (action === "ADD") {
-      if (item.length > 0) {
-        id = item[item.length - 1].id + 1;
-      } else id = 1;
-      dispatch(itemAction.addItem({ ...data, id }));
-    } else {
-      dispatch(itemAction.editItem(data));
-    }
-  };
+  //   const iconStyle = {
+  //     width: windowWidth > 555 ? "30px" : windowWidth > 425 ? "25px" : "20px",
+  //     height: "auto",
+  //     alignSelf: "center",
+  //     cursor: "pointer",
+  //   };
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -164,35 +150,34 @@ const Recipe = () => {
           flexDirection: "row",
           p: "16px 0 !important",
           gap: "16px",
-          justifyContent: "space-between",
           maxWidth: "100% !important",
-          "@media (max-width:424px)": {
-            flexDirection: "column",
-          },
+          "@media (max-width:424px)": {},
         }}
       >
         <TextField
-          value={search}
-          onChange={handleChangeSearch}
-          placeholder="item name ..."
+          required
+          id="outlined-required"
+          defaultValue={1}
+          value={order}
+          type="number"
+          onChange={handleChangeOrder}
+          InputProps={{
+            inputProps: { min: 1 },
+          }}
           sx={{
             width: "350px",
             backgroundColor: "#f9ffff",
-            "@media (max-width:426px)": {
-              width: "80%",
-              minWidth: "250px;",
-            },
             "@media (max-width:555px)": {
-              width: "50%",
-              minWidth: "225px;",
+              width: "auto",
+              minWidth: "100px",
             },
           }}
         />
         <Button
           variant="primary"
-          onClick={() => handleDialogChange("ADD")}
+          onClick={calculate}
           sx={{
-            width: "fit-content",
+            minWidth: "fit-content",
             p: "12px 20px",
             fontSize: "16px",
             backgroundColor: "#8d6767",
@@ -207,10 +192,10 @@ const Recipe = () => {
           }}
         >
           <img alt="add" src={add} style={{ marginRight: 1 }} />
-          Add item
+          Calculate
         </Button>
       </Container>
-      {/* <Paper
+      <Paper
         elevation={3}
         sx={{
           width: "100%",
@@ -222,7 +207,6 @@ const Recipe = () => {
           backgroundColor: "#f9ffff",
           borderRadius: "12px",
           m: "0 auto",
-        //   gap: "36px",
           "@media (max-width:426px)": {
             width: "100%",
           },
@@ -239,36 +223,77 @@ const Recipe = () => {
               }}
             >
               <TableRow>
-                <StyledTableCell align="right">ID</StyledTableCell>
                 <StyledTableCell>ITEM NAME</StyledTableCell>
-                <StyledTableCell align="right">QTY</StyledTableCell>
+                <StyledTableCell align="right">STOCK</StyledTableCell>
+                <StyledTableCell align="right">RECIPE</StyledTableCell>
+                <StyledTableCell align="right">QTY USED</StyledTableCell>
                 <StyledTableCell align="center">UOM</StyledTableCell>
-                <StyledTableCell align="right">PRICE&nbsp;(Rp)</StyledTableCell>
-                <StyledTableCell align="center">ACTION</StyledTableCell>
+                <StyledTableCell align="right">
+                  ITEM PRICE&nbsp;(Rp)
+                </StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {currentItem?.map((row) => (
-                <StyledTableRow key={row.name}>
-                  <StyledTableCell align="right" component="th" scope="row">
-                    {row.id}
-                  </StyledTableCell>
+              {data?.map((row, idx) => (
+                <StyledTableRow key={row.idx}>
                   <StyledTableCell>{row.item_name}</StyledTableCell>
-                  <StyledTableCell align="right">{row.qty}</StyledTableCell>
-                  <StyledTableCell align="center">{row.uom}</StyledTableCell>
-                  <StyledTableCell align="right">{row.price}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    <img
-                      alt="edit"
-                      src={edit}
-                      onClick={() => handleDialogChange("EDIT", row)}
-                      style={iconStyle}
+                  <StyledTableCell align="right">
+                    {row.qty_stock}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    <TextField
+                      required
+                      id="outlined-required"
+                      defaultValue={1}
+                      value={row.qty_recipe}
+                      type="number"
+                      onChange={(e) =>
+                        handleChangeData(e, { idx, field: "recipe" })
+                      }
+                      InputProps={{
+                        inputProps: { min: 1 },
+                      }}
+                      sx={{
+                        width: "75px",
+                        backgroundColor: "#f9ffff",
+                        "& .MuiInputBase-input": {
+                          p: "4px",
+                          textAlign: "end",
+                        },
+                      }}
                     />
-                    <img
-                      alt="delete"
-                      src={remove}
-                      onClick={() => handleDialogDelete(row)}
-                      style={iconStyle}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    <TextField
+                      disabled
+                      id="outlined-required"
+                      defaultValue={1}
+                      value={row.qty_used}
+                      sx={{
+                        width: "75px",
+                        backgroundColor: "#f9ffff",
+                        "& .MuiInputBase-input": {
+                          p: "4px",
+                          textAlign: "end",
+                        },
+                      }}
+                    />
+                  </StyledTableCell>
+                  <StyledTableCell align="center">{row.uom}</StyledTableCell>
+                  <StyledTableCell align="right">
+                    <TextField
+                      disabled
+                      id="outlined-required"
+                      defaultValue={0}
+                      value={row.price}
+                      sx={{
+                        width: "100px",
+                        backgroundColor: "#f9ffff",
+                        "& .MuiInputBase-input": {
+                          p: "4px",
+                          textAlign: "end",
+                        },
+                      }}
                     />
                   </StyledTableCell>
                 </StyledTableRow>
@@ -276,7 +301,7 @@ const Recipe = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
+        {/* <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
           count={filteredItem.length}
@@ -292,9 +317,9 @@ const Recipe = () => {
             zIndex: 1,
             overflow:"hidden"
           }}
-        />
-      </Paper> */}
-      <DialogItem
+        /> */}
+      </Paper>
+      {/* <DialogItem
         isOpen={openChange}
         data={update}
         handleClose={handleDialogChange}
@@ -306,7 +331,7 @@ const Recipe = () => {
         data={update}
         handleClose={handleDialogDelete}
         handleDelete={(status, data) => handleDelete(status, data)}
-      />
+      /> */}
     </Container>
   );
 };

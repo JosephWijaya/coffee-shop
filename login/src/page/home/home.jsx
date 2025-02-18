@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import logo from "../../asset/logo.png";
 import { Button, Container, Paper, Typography } from "@mui/material";
@@ -12,6 +11,7 @@ const Home = () => {
     <Container
       sx={{
         width: "100vw",
+        maxWidth: "100vw !important",
         height: "100vh",
         display: "flex",
         backgroundColor: "#ebebebeb",

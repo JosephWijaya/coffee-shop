@@ -34,13 +34,14 @@ const Login = () => {
         setError("Email tidak valid");
       }
     },
-    [email]
+    [email, dispatch, navigate]
   );
 
   return (
     <Container
       sx={{
         width: "100vw",
+        maxWidth: "100vw !important",
         height: "100vh",
         display: "flex",
         backgroundColor: "#ebebebeb",

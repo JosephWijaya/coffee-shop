@@ -9,15 +9,14 @@ import Home from "./page/home/home";
 
 function App() {
   const navigate = useNavigate();
-  const { isAuth, email, token } = useSelector((state) => state.auth);
+  const { email, token } = useSelector((state) => state.auth);
   useEffect(() => {
-    console.log(isAuth, email, token);
     if (!email) {
       navigate(ROUTE.LOGIN);
     } else if(!token){
       navigate(ROUTE.VALIDATE);
     }
-  }, [email, token]);
+  }, [email, token, navigate]);
 
   return (
     <>

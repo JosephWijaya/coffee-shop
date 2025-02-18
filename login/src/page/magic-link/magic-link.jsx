@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import logo from "../../asset/logo.png";
 import { Button, Container, Paper, Typography } from "@mui/material";
 import { authAction } from "../../store/authReducer";
@@ -9,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 const MagicLink = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [token, setToken] = useState("");
 
   const generateRandomizeString = () => {
     const characters =
@@ -21,7 +19,6 @@ const MagicLink = () => {
       result += characters[randomIndex];
     }
 
-    setToken(result);
     dispatch(authAction.addToken(result));
   };
 
@@ -34,6 +31,7 @@ const MagicLink = () => {
     <Container
       sx={{
         width: "100vw",
+        maxWidth: "100vw !important",
         height: "100vh",
         display: "flex",
         backgroundColor: "#ebebebeb",

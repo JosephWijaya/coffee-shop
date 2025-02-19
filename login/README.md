@@ -1,6 +1,7 @@
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project can be seen on the [link](https://github.com/JosephWijaya/coffee-shop/tree/development/login)
 
 ## Available Scripts
 
@@ -14,57 +15,58 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
 
-### `npm test`
+## Library and Tools
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+In this project, we used Libraries and Tools :
 
-### `npm run build`
+### "@mui/lab"
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+This project use @mui/lab version 5.0.0-alpha.173 
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### "@mui/material"
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+This project use @mui/material version 5.16.14 
 
-### `npm run eject`
+### "@reduxjs/toolkit"
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+This project use @reduxjs/toolkit version 2.5.1
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### "cra-template"
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+This project use cra-tamplate version 1.2.0
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### "localforage"
 
-## Learn More
+This project use localforage version 1.10.0
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### "minimal-ui"
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+This project use minimal-ui version 1.0.0
 
-### Code Splitting
+### "react"
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+This project use react version 19.0.0
 
-### Analyzing the Bundle Size
+### "react-dom"
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+This project use react-dom version 19.0.0
 
-### Making a Progressive Web App
+### "react-redux"
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+This project use react-redux version 9.2.0
 
-### Advanced Configuration
+### "react-router-dom"
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+This project use rreact-router-dom version 7.1.5
 
-### Deployment
+### "react-scripts"
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+This project use react-scripts version 5.0.1
 
-### `npm run build` fails to minify
+### "redux-persist"
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project use redux-persist version 6.0.0
+
+### "redux-toolkit"
+
+This project use @mui/material version 1.1.2

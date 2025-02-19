@@ -5,9 +5,6 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@iconify-icons/solar": "^1.2.3",
-    "@iconify/icons-ic": "^1.2.13",
-    "@iconify/react": "^5.2.0",
     "@mui/lab": "^5.0.0-alpha.173",
     "@mui/material": "^5.16.14",
     "@reduxjs/toolkit": "^2.5.1",

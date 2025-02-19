@@ -40,6 +40,7 @@ const initialState = {
           qty: 15,
           uom: "g",
           price: 1800,
+          subTotal: 1800,
         },
         {
           id: 2,
@@ -47,6 +48,7 @@ const initialState = {
           qty: 150,
           uom: "ml",
           price: 9000,
+          subTotal: 9000,
         },
         {
           id: 3,
@@ -54,6 +56,7 @@ const initialState = {
           qty: 20,
           uom: "g",
           price: 600,
+          subTotal: 600,
         },
         {
           id: 4,
@@ -61,6 +64,7 @@ const initialState = {
           qty: 1,
           uom: "pcs",
           price: 1000,
+          subTotal: 1000,
         },
         {
           id: 5,
@@ -68,6 +72,7 @@ const initialState = {
           qty: 20,
           uom: "g",
           price: 4000,
+          subTotal: 4000,
         },
         {
           id: 6,
@@ -75,6 +80,7 @@ const initialState = {
           qty: 50,
           uom: "ml",
           price: 500,
+          subTotal: 500,
         },
       ],
     },

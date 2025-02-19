@@ -25,7 +25,7 @@ const Recipe = () => {
   const { item } = useSelector((state) => state.item);
   const { recipe, report } = useSelector((state) => state.report);
   const [order, setOrder] = useState(2);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(report);
   const name = item.map((list) => {
     return list.item_name;
   });
@@ -68,8 +68,11 @@ const Recipe = () => {
     }
     return unit;
   });
-  const price = item.map((list, idx) => {
-    return (used[idx] * list.price) / pcs[idx];
+  const priceUnit = pcs.map((unit, idx) => {
+    return item[idx].price / unit;
+  });
+  const price = used.map((list, idx) => {
+    return list * priceUnit[idx];
   });
   let total = 0;
   price.forEach((value) => {
@@ -100,7 +103,32 @@ const Recipe = () => {
   };
 
   const submit = () => {
-    console.log("SUBMIT");
+    let arrRecipe = [],
+      newData = {},
+      obj = data,
+      newReport = {};
+    const id = obj.length > 0 ? obj[obj.length - 1].id + 1 : 1;
+    for (let i = 0; i < name.length; i++) {
+      newData = {
+        id: item[i].id,
+        item_name: name[i],
+        qty: used[i],
+        uom: uom[i],
+        price: priceUnit[i],
+        subTotal: price[i],
+      };
+      arrRecipe.push(newData);
+    }
+    newReport = {
+      id,
+      order,
+      date: new Date().toLocaleString(),
+      total,
+      recipe: arrRecipe,
+    };
+    obj = [...obj, newReport];
+    setData(obj);
+    dispatch(reportAction.addReport(newReport));
   };
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -243,7 +271,10 @@ const Recipe = () => {
                 <StyledTableCell align="right">QTY USED</StyledTableCell>
                 <StyledTableCell align="center">UOM</StyledTableCell>
                 <StyledTableCell align="right">
-                  ITEM PRICE&nbsp;(Rp)
+                  UNIT PRICE&nbsp;(Rp)
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  SUB TOTAL&nbsp;(Rp)
                 </StyledTableCell>
               </TableRow>
             </TableHead>
@@ -290,6 +321,22 @@ const Recipe = () => {
                     />
                   </StyledTableCell>
                   <StyledTableCell align="center">{uom[idx]}</StyledTableCell>
+                  <StyledTableCell align="right">
+                    <TextField
+                      disabled
+                      id="outlined-required"
+                      defaultValue={0}
+                      value={priceUnit[idx]}
+                      sx={{
+                        width: "100px",
+                        backgroundColor: "#f9ffff",
+                        "& .MuiInputBase-input": {
+                          p: "4px",
+                          textAlign: "end",
+                        },
+                      }}
+                    />
+                  </StyledTableCell>
                   <StyledTableCell align="right">
                     <TextField
                       disabled

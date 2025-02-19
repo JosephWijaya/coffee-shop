@@ -178,11 +178,11 @@ const Item = () => {
             width: "350px",
             backgroundColor: "#f9ffff",
             "@media (max-width:426px)": {
-              width: "80%",
+              width: "auto",
               minWidth: "250px;",
             },
             "@media (max-width:555px)": {
-              width: "50%",
+              width: "60%",
               minWidth: "225px;",
             },
           }}

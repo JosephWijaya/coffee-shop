@@ -13,12 +13,14 @@ import {
 } from "@mui/material";
 import logo from "../asset/logo.png";
 import user from "../asset/account_circle.svg";
+import menu from "../asset/menu.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { authAction } from "../store/authReducer";
 import { itemAction } from "../store/itemReducer";
 import { reportAction } from "../store/reportReducer";
 import { ROUTE } from "../constant/route";
+import Drawer from "../component/drawer";
 
 const pages = ["Item", "Recipe"];
 
@@ -27,6 +29,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [openUser, setOpenUser] = React.useState(null);
+  const [openDrawer, setOpenDrawer] = React.useState(false);
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
 
   React.useEffect(() => {
@@ -40,7 +43,6 @@ const Navbar = () => {
     };
   }, []);
 
-  // Define styles based on window width
   const logoStyle = {
     width: windowWidth > 555 ? "50px" : windowWidth > 425 ? "40px" : "30px",
     height: "auto",
@@ -55,11 +57,15 @@ const Navbar = () => {
     setOpenUser(null);
   };
 
+  const handleDrawer = () => {
+    setOpenDrawer(!openDrawer);
+  };
+
   const handleLogout = () => {
-    dispatch(authAction.logout());
+    // dispatch(authAction.logout());
     dispatch(itemAction.clear());
     dispatch(reportAction.clear());
-    navigate(ROUTE.LOGIN);
+    // navigate(ROUTE.LOGIN);
   };
 
   const handleMenu = (id) => {
@@ -80,16 +86,22 @@ const Navbar = () => {
       position="static"
       sx={{
         height: "10vh",
-        backgroundColor: "#8d6767",
+        backgroundColor: "#685252",
       }}
     >
-      <Container
-        maxWidth="xl"
+      <Box
         sx={{
           p: 0,
+          display: "flex",
+          height: "inherit",
         }}
       >
-        <Toolbar disableGutters>
+        <Toolbar disableGutters sx={{
+            display:"flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width:"-webkit-fill-available",
+        }}>
           <Container
             sx={{
               display: "flex",
@@ -97,6 +109,25 @@ const Navbar = () => {
               gap: "12px",
             }}
           >
+            <Box
+              sx={{
+                my: 2,
+                display: "none",
+                "&:hover": {
+                  backgroundColor: "#685252",
+                },
+                "@media (max-width:555px)": {
+                  display: "flex",
+                },
+              }}
+            >
+              <img
+                alt="menu"
+                src={menu}
+                // style={logoStyle}
+                onClick={handleDrawer}
+              />
+            </Box>
             <img alt="logo" src={logo} style={logoStyle} />
             <Typography
               noWrap
@@ -148,6 +179,9 @@ const Navbar = () => {
                 width: "max-content",
                 display: "flex",
                 flexDirection: "row",
+                "@media (max-width:555px)": {
+                  display: "none",
+                },
               }}
             >
               <Typography
@@ -157,9 +191,6 @@ const Navbar = () => {
                   fontWeight: 700,
                   fontSize: "0.8rem",
                   alignContent: "center",
-                  "@media (max-width:425px)": {
-                    display: "none",
-                  },
                 }}
               >
                 {email}
@@ -192,7 +223,14 @@ const Navbar = () => {
             </Box>
           </Container>
         </Toolbar>
-      </Container>
+      </Box>
+      <Drawer
+        isOpen={openDrawer}
+        handleClose={handleDrawer}
+        pages={pages}
+        onClick={handleMenu}
+        logout={handleLogout}
+      />
     </AppBar>
   );
 };

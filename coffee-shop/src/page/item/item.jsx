@@ -83,7 +83,7 @@ const Item = () => {
 
   const handleSearch = () => {
     const obj = data.filter((list) =>
-      list.item_name.toLowerCase().includes(search.toLowerCase())
+      list.item_name?.toLowerCase().includes(search?.toLowerCase())
     );
     setFilteredItem(obj);
     currentItems(obj);
@@ -121,7 +121,8 @@ const Item = () => {
       if (data.length > 0) {
         id = data[data.length - 1].id + 1;
       } else id = 1;
-      dispatch(itemAction.addItem({ ...data, id }));
+      newData.id = id;
+      dispatch(itemAction.addItem(newData));
     } else {
       dispatch(itemAction.editItem(newData));
     }
@@ -177,12 +178,12 @@ const Item = () => {
           sx={{
             width: "350px",
             backgroundColor: "#f9ffff",
-            "@media (max-width:426px)": {
+            "@media (min-width:300px)": {
               width: "auto",
               minWidth: "250px;",
             },
-            "@media (max-width:555px)": {
-              width: "60%",
+            "@media (min-width:425px) and (max-width:555px)": {
+              width: "50%",
               minWidth: "225px;",
             },
           }}
@@ -221,7 +222,7 @@ const Item = () => {
           backgroundColor: "#f9ffff",
           borderRadius: "12px",
           m: "0 auto",
-        //   gap: "36px",
+          //   gap: "36px",
           "@media (max-width:426px)": {
             width: "100%",
           },
@@ -253,7 +254,9 @@ const Item = () => {
                     {row.id}
                   </StyledTableCell>
                   <StyledTableCell>{row.item_name}</StyledTableCell>
-                  <StyledTableCell align="right">{row.qty}</StyledTableCell>
+                  <StyledTableCell align="right">
+                    {Number(row.qty).toFixed(2)}
+                  </StyledTableCell>
                   <StyledTableCell align="center">{row.uom}</StyledTableCell>
                   <StyledTableCell align="right">{row.price}</StyledTableCell>
                   <StyledTableCell align="center">
@@ -287,9 +290,9 @@ const Item = () => {
             position: "sticky",
             bottom: 0,
             backgroundColor: "#685252",
-            color:"#fff",
+            color: "#fff",
             zIndex: 1,
-            overflow:"hidden"
+            overflow: "hidden",
           }}
         />
       </Paper>

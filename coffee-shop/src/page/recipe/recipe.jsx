@@ -105,7 +105,6 @@ const Recipe = () => {
 
   const submit = () => {
     const filter = stock.filter((data, idx) => data < used[idx]);
-    console.log(filter);
     if (stock.some((num) => num <= 0 || filter.length > 0)) {
       alert("Insufficient Stock!");
     } else {

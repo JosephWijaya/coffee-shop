@@ -15,25 +15,25 @@ In this page we can Logout.
 
 ## Coffee Shop
 
-This Project managing inventory and calculate\
-the Cost of Goods Sold (COGS) for an iced coffee recipe.
+This Project managing inventory and\
+calculate the Cost of Goods Sold (COGS) for an iced coffee recipe.
 
 In this Project we have many Fiture, such as :
 
 ### Manage Inventory
 
-This Fiture provide utility to\
-- Show Items\
-- Create Item\
-- Edit Item\
-- Delete Item\
+This Fiture provide utility to
+- Show Items
+- Create Item
+- Edit Item
+- Delete Item
 - Search and Pagination
 
 ### Input Recipe
 
-This Fiture provide utility to\
-- Input recipe\
-- Input Order\
-- Calculate budget\
-- Store Transaction\
+This Fiture provide utility to
+- Input recipe
+- Input Order
+- Calculate budget
+- Store Transaction
 - Reeduce Stock

@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { authAction } from "../store/authReducer";
 import { itemAction } from "../store/itemReducer";
+import { reportAction } from "../store/reportReducer";
 import { ROUTE } from "../constant/route";
 
 const pages = ["Item", "Recipe"];
@@ -57,6 +58,7 @@ const Navbar = () => {
   const handleLogout = () => {
     dispatch(authAction.logout());
     dispatch(itemAction.clear());
+    dispatch(reportAction.clear());
     navigate(ROUTE.LOGIN);
   };
 

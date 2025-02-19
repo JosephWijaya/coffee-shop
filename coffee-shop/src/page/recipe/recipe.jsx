@@ -19,17 +19,18 @@ import {
 } from "@mui/material";
 import add from "../../asset/add.svg";
 import { reportAction } from "../../store/reportReducer";
+import { itemAction } from "../../store/itemReducer";
 
 const Recipe = () => {
   const dispatch = useDispatch();
-  const { item } = useSelector((state) => state.item);
+  const { data } = useSelector((state) => state.item);
   const { recipe, report } = useSelector((state) => state.report);
   const [order, setOrder] = useState(2);
-  const [data, setData] = useState(report);
-  const name = item.map((list) => {
+  const [newData, setNewData] = useState(report);
+  const name = data.map((list) => {
     return list.item_name;
   });
-  const stock = item.map((list) => {
+  const stock = data.map((list) => {
     let qty = 0;
     if (list.uom === "kg") {
       qty = list.qty * 1000;
@@ -48,7 +49,7 @@ const Recipe = () => {
   const used = qtyRecipe.map((qty) => {
     return qty * order;
   });
-  const uom = item.map((list) => {
+  const uom = data.map((list) => {
     let uom = "";
     if (list.uom === "kg") {
       uom = "g";
@@ -59,7 +60,7 @@ const Recipe = () => {
     }
     return uom;
   });
-  const pcs = item.map((list) => {
+  const pcs = data.map((list) => {
     let unit = 0;
     if (list.uom === "kg" || list.uom === "liter") {
       unit = 1000;
@@ -69,7 +70,7 @@ const Recipe = () => {
     return unit;
   });
   const priceUnit = pcs.map((unit, idx) => {
-    return item[idx].price / unit;
+    return data[idx].price / unit;
   });
   const price = used.map((list, idx) => {
     return list * priceUnit[idx];
@@ -87,8 +88,8 @@ const Recipe = () => {
 
   const handleChangeQty = (e, idx) => {
     let value = Number(e.target.value);
-    if (value > stock[idx]) {
-      value = stock[idx];
+    if (value > Math.floor(stock[idx] / order)) {
+      value = Math.floor(stock[idx] / order);
     }
     if (value === "" || /^[0-9]*$/.test(value)) {
       const newQtyRecipe = [...qtyRecipe];
@@ -103,32 +104,37 @@ const Recipe = () => {
   };
 
   const submit = () => {
-    let arrRecipe = [],
-      newData = {},
-      obj = data,
-      newReport = {};
-    const id = obj.length > 0 ? obj[obj.length - 1].id + 1 : 1;
-    for (let i = 0; i < name.length; i++) {
-      newData = {
-        id: item[i].id,
-        item_name: name[i],
-        qty: used[i],
-        uom: uom[i],
-        price: priceUnit[i],
-        subTotal: price[i],
+    if (stock.some((num) => num <= 0)) {
+      alert("Insufficient Stock!");
+    } else {
+      let arrRecipe = [],
+        newObj = {},
+        obj = newData,
+        newReport = {};
+      const id = obj.length > 0 ? obj[obj.length - 1].id + 1 : 1;
+      for (let i = 0; i < name.length; i++) {
+        newObj = {
+          id: data[i].id,
+          item_name: name[i],
+          qty: used[i],
+          uom: uom[i],
+          price: priceUnit[i],
+          subTotal: price[i],
+        };
+        arrRecipe.push(newObj);
+      }
+      newReport = {
+        id,
+        order,
+        date: new Date().toLocaleString(),
+        total,
+        recipe: arrRecipe,
       };
-      arrRecipe.push(newData);
+      obj = [...obj, newReport];
+      setNewData(obj);
+      dispatch(reportAction.addReport(newReport));
+      dispatch(itemAction.editStock({ arrRecipe, data }));
     }
-    newReport = {
-      id,
-      order,
-      date: new Date().toLocaleString(),
-      total,
-      recipe: arrRecipe,
-    };
-    obj = [...obj, newReport];
-    setData(obj);
-    dispatch(reportAction.addReport(newReport));
   };
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -279,10 +285,10 @@ const Recipe = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {item?.map((row, idx) => (
+              {data?.map((row, idx) => (
                 <StyledTableRow key={row.idx}>
                   <StyledTableCell>{name[idx]}</StyledTableCell>
-                  <StyledTableCell align="right">{stock[idx]}</StyledTableCell>
+                  <StyledTableCell align="right">{Math.round(stock[idx])}</StyledTableCell>
                   <StyledTableCell align="right">
                     <TextField
                       required
@@ -293,7 +299,7 @@ const Recipe = () => {
                       onChange={(e) => handleChangeQty(e, idx)}
                       inputRef={(el) => (inputRefs.current[idx] = el)} // Store ref
                       InputProps={{
-                        inputProps: { min: 1, max: stock[idx] },
+                        inputProps: { min: 1, max: stock[idx] / order },
                       }}
                       sx={{
                         width: "75px",

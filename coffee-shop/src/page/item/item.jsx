@@ -24,13 +24,13 @@ import DialogDeleteItem from "../../component/dialog-delete-item";
 
 const Item = () => {
   const dispatch = useDispatch();
-  const { item } = useSelector((state) => state.item);
+  const { data } = useSelector((state) => state.item);
   const [search, setSearch] = useState("");
   const [action, setAction] = useState("");
   const [openChange, setOpenChange] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [update, setUpdate] = useState({});
-  const [filteredItem, setFilteredItem] = useState(item);
+  const [filteredItem, setFilteredItem] = useState(data);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [currentItem, setCurrentItem] = useState();
@@ -66,7 +66,7 @@ const Item = () => {
 
   useEffect(() => {
     handleSearch();
-  }, [item, search, page, rowsPerPage]);
+  }, [data, search, page, rowsPerPage]);
 
   const currentItems = (items) => {
     const data = items.slice(
@@ -82,11 +82,11 @@ const Item = () => {
   };
 
   const handleSearch = () => {
-    const data = item.filter((list) =>
+    const obj = data.filter((list) =>
       list.item_name.toLowerCase().includes(search.toLowerCase())
     );
-    setFilteredItem(data);
-    currentItems(data);
+    setFilteredItem(obj);
+    currentItems(obj);
   };
 
   const handleDialogChange = (status, data) => {
@@ -115,15 +115,15 @@ const Item = () => {
     }
   };
 
-  const handleSubmit = (data) => {
+  const handleSubmit = (newData) => {
     let id = -1;
     if (action === "ADD") {
-      if (item.length > 0) {
-        id = item[item.length - 1].id + 1;
+      if (data.length > 0) {
+        id = data[data.length - 1].id + 1;
       } else id = 1;
       dispatch(itemAction.addItem({ ...data, id }));
     } else {
-      dispatch(itemAction.editItem(data));
+      dispatch(itemAction.editItem(newData));
     }
   };
 

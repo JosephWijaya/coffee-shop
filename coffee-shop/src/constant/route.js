@@ -1,7 +1,9 @@
 export const BASE_ROUTE = "/coffee-shop";
 
 export const ROUTE = Object.freeze({
-  LOGIN: "/",
+  LOGIN: "/login",
   VALIDATE: "/validate",
-  HOME: "/home",
+  HOME: "/",
+  ITEM: "item",
+  RECIPE: "recipe",
 });

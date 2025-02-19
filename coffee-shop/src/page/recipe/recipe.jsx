@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import edit from "../../asset/edit.svg";
-import remove from "../../asset/delete.svg";
-import add from "../../asset/add.svg";
 import {
+  Box,
   Button,
   Container,
+  InputLabel,
   Paper,
   styled,
   Table,
@@ -14,105 +13,95 @@ import {
   tableCellClasses,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
   TextField,
+  Typography,
 } from "@mui/material";
-import DialogItem from "../../component/dialog-item";
-import { itemAction } from "../../store/itemReducer";
-import DialogDeleteItem from "../../component/dialog-delete-item";
-
-// TODO: Melakukan Calculate dan TidyUP 
+import add from "../../asset/add.svg";
+import { reportAction } from "../../store/reportReducer";
 
 const Recipe = () => {
   const dispatch = useDispatch();
   const { item } = useSelector((state) => state.item);
+  const { recipe, report } = useSelector((state) => state.report);
   const [order, setOrder] = useState(2);
   const [data, setData] = useState([]);
-  const recipe = [15, 150, 20, 1, 20, 50];
-
-  useEffect(() => {
-    setData([]);
-    console.log(item);
+  const name = item.map((list) => {
+    return list.item_name;
+  });
+  const stock = item.map((list) => {
+    let qty = 0;
+    if (list.uom === "kg") {
+      qty = list.qty * 1000;
+    } else if (list.uom === "liter") {
+      qty = list.qty * 1000;
+    } else {
+      qty = list.qty;
+    }
+    return qty;
+  });
+  const [qtyRecipe, setqtyRecipe] = useState(
+    recipe.map((list) => {
+      return list.qty;
+    })
+  );
+  const used = qtyRecipe.map((qty) => {
+    return qty * order;
+  });
+  const uom = item.map((list) => {
     let uom = "";
-    let qty,
-      pcs,
-      qty_recipe = 0;
-    const data = item.map((list, idx) => {
-      if (list.uom === "kg") {
-        uom = "g";
-        qty = list.qty * 1000;
-        pcs = 1000;
-      } else if (list.uom === "liter") {
-        uom = "ml";
-        qty = list.qty * 1000;
-        pcs = 1000;
-      } else {
-        uom = list.uom;
-        qty = list.qty;
-        pcs = 1;
-      }
-      return {
-        item_name: list.item_name,
-        qty_stock: qty,
-        qty_recipe: recipe[idx],
-        qty_used: recipe[idx] * order,
-        uom: uom,
-        price: recipe[idx] * order * (list.price / pcs),
-      };
-    });
-    setData(data);
-  }, [item]);
+    if (list.uom === "kg") {
+      uom = "g";
+    } else if (list.uom === "liter") {
+      uom = "ml";
+    } else {
+      uom = list.uom;
+    }
+    return uom;
+  });
+  const pcs = item.map((list) => {
+    let unit = 0;
+    if (list.uom === "kg" || list.uom === "liter") {
+      unit = 1000;
+    } else {
+      unit = 10;
+    }
+    return unit;
+  });
+  const price = item.map((list, idx) => {
+    return (used[idx] * list.price) / pcs[idx];
+  });
+  let total = 0;
+  price.forEach((value) => {
+    total += value;
+  });
+
+  const inputRefs = useRef([]);
 
   const handleChangeOrder = (e) => {
     setOrder(e.target.value);
   };
 
-  const handleChangeData = (e, data) => {
-    const value = e.target.value;
-    console.log(data, data.idx, value);
-    if (data.field === "recipe") {
-      if (value === "" || /^[0-9]*$/.test(value)) {
-        assignData(data.idx, { qty_recipe: value });
-      }
+  const handleChangeQty = (e, idx) => {
+    let value = Number(e.target.value);
+    if (value > stock[idx]) {
+      value = stock[idx];
+    }
+    if (value === "" || /^[0-9]*$/.test(value)) {
+      const newQtyRecipe = [...qtyRecipe];
+      newQtyRecipe[idx] = value;
+      setqtyRecipe(newQtyRecipe);
+      setTimeout(() => {
+        if (inputRefs.current[idx]) {
+          inputRefs.current[idx].focus();
+        }
+      }, 0);
     }
   };
 
-  const assignData = (idx, newData) => {
-    console.log(newData);
-    const updatedItems = data.map((item, i) => {
-      if (i === idx) {
-        return { ...item, ...newData }; // Update the specific item
-      }
-      return item; // Return the item unchanged
-    });
-    console.log(updatedItems);
-    setData(updatedItems);
+  const submit = () => {
+    console.log("SUBMIT");
   };
-
-  const calculate = () => {
-    console.log("CALCULATE");
-  };
-  //   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  //   useEffect(() => {
-  //     const handleResize = () => {
-  //       setWindowWidth(window.innerWidth);
-  //     };
-
-  //     window.addEventListener("resize", handleResize);
-  //     return () => {
-  //       window.removeEventListener("resize", handleResize);
-  //     };
-  //   }, []);
-
-  // Define styles based on window width
-  //   const iconStyle = {
-  //     width: windowWidth > 555 ? "30px" : windowWidth > 425 ? "25px" : "20px",
-  //     height: "auto",
-  //     alignSelf: "center",
-  //     cursor: "pointer",
-  //   };
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -151,33 +140,58 @@ const Recipe = () => {
           p: "16px 0 !important",
           gap: "16px",
           maxWidth: "100% !important",
-          "@media (max-width:424px)": {},
+          "@media (max-width:426px)": {
+            flexDirection: "column",
+          },
         }}
       >
-        <TextField
-          required
-          id="outlined-required"
-          defaultValue={1}
-          value={order}
-          type="number"
-          onChange={handleChangeOrder}
-          InputProps={{
-            inputProps: { min: 1 },
-          }}
+        <Box
           sx={{
-            width: "350px",
-            backgroundColor: "#f9ffff",
-            "@media (max-width:555px)": {
-              width: "auto",
-              minWidth: "100px",
-            },
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            gap: "6px",
           }}
-        />
+        >
+          <InputLabel
+            sx={{
+              width: "40%",
+              minWidth: "100px",
+              maxWidth: "125px",
+              alignSelf: "center",
+              textOverflow: "unset",
+              "@media (max-width:555px)": {
+                width: "30%",
+              },
+            }}
+          >
+            <Typography variant="h6">Qty Order</Typography>
+          </InputLabel>
+          <TextField
+            required
+            id="outlined-required"
+            defaultValue={1}
+            value={order}
+            type="number"
+            onChange={handleChangeOrder}
+            InputProps={{
+              inputProps: { min: 1 },
+            }}
+            sx={{
+              width: "250px",
+              backgroundColor: "#f9ffff",
+              "@media (max-width:555px)": {
+                width: "70%",
+                minWidth: "100px",
+              },
+            }}
+          />
+        </Box>
         <Button
           variant="primary"
-          onClick={calculate}
+          onClick={submit}
           sx={{
-            minWidth: "fit-content",
+            width: "fit-content",
             p: "12px 20px",
             fontSize: "16px",
             backgroundColor: "#8d6767",
@@ -192,7 +206,7 @@ const Recipe = () => {
           }}
         >
           <img alt="add" src={add} style={{ marginRight: 1 }} />
-          Calculate
+          Submit
         </Button>
       </Container>
       <Paper
@@ -206,7 +220,7 @@ const Recipe = () => {
           alignSelf: "center",
           backgroundColor: "#f9ffff",
           borderRadius: "12px",
-          m: "0 auto",
+          m: "0 auto 16px",
           "@media (max-width:426px)": {
             width: "100%",
           },
@@ -234,31 +248,27 @@ const Recipe = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data?.map((row, idx) => (
+              {item?.map((row, idx) => (
                 <StyledTableRow key={row.idx}>
-                  <StyledTableCell>{row.item_name}</StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.qty_stock}
-                  </StyledTableCell>
+                  <StyledTableCell>{name[idx]}</StyledTableCell>
+                  <StyledTableCell align="right">{stock[idx]}</StyledTableCell>
                   <StyledTableCell align="right">
                     <TextField
                       required
                       id="outlined-required"
                       defaultValue={1}
-                      value={row.qty_recipe}
+                      value={qtyRecipe[idx]}
                       type="number"
-                      onChange={(e) =>
-                        handleChangeData(e, { idx, field: "recipe" })
-                      }
+                      onChange={(e) => handleChangeQty(e, idx)}
+                      inputRef={(el) => (inputRefs.current[idx] = el)} // Store ref
                       InputProps={{
-                        inputProps: { min: 1 },
+                        inputProps: { min: 1, max: stock[idx] },
                       }}
                       sx={{
                         width: "75px",
                         backgroundColor: "#f9ffff",
                         "& .MuiInputBase-input": {
                           p: "4px",
-                          textAlign: "end",
                         },
                       }}
                     />
@@ -268,7 +278,7 @@ const Recipe = () => {
                       disabled
                       id="outlined-required"
                       defaultValue={1}
-                      value={row.qty_used}
+                      value={used[idx]}
                       sx={{
                         width: "75px",
                         backgroundColor: "#f9ffff",
@@ -279,13 +289,13 @@ const Recipe = () => {
                       }}
                     />
                   </StyledTableCell>
-                  <StyledTableCell align="center">{row.uom}</StyledTableCell>
+                  <StyledTableCell align="center">{uom[idx]}</StyledTableCell>
                   <StyledTableCell align="right">
                     <TextField
                       disabled
                       id="outlined-required"
                       defaultValue={0}
-                      value={row.price}
+                      value={price[idx]}
                       sx={{
                         width: "100px",
                         backgroundColor: "#f9ffff",
@@ -301,37 +311,11 @@ const Recipe = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        {/* <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={filteredItem.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          sx={{
-            position: "sticky",
-            bottom: 0,
-            backgroundColor: "#685252",
-            color:"#fff",
-            zIndex: 1,
-            overflow:"hidden"
-          }}
-        /> */}
       </Paper>
-      {/* <DialogItem
-        isOpen={openChange}
-        data={update}
-        handleClose={handleDialogChange}
-        action={action}
-        handleSubmit={(data) => handleSubmit(data)}
-      />
-      <DialogDeleteItem
-        isOpen={openDelete}
-        data={update}
-        handleClose={handleDialogDelete}
-        handleDelete={(status, data) => handleDelete(status, data)}
-      /> */}
+
+      <Typography variant="h6">
+        Total Price : Rp{total.toLocaleString()}
+      </Typography>
     </Container>
   );
 };

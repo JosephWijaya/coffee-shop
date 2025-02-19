@@ -7,7 +7,6 @@ import {
   Typography,
   Menu,
   Container,
-  Avatar,
   Button,
   Tooltip,
   MenuItem,
@@ -62,7 +61,6 @@ const Navbar = () => {
   };
 
   const handleMenu = (id) => {
-    console.log(id)
     switch (id) {
       case 0:
         navigate(ROUTE.ITEM);

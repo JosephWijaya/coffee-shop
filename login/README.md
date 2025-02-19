@@ -19,54 +19,54 @@ You may also see any lint errors in the console.
 
 In this project, we used Libraries and Tools :
 
-### "@mui/lab"
+### @mui/lab
 
 This project use @mui/lab version 5.0.0-alpha.173 
 
-### "@mui/material"
+### @mui/material
 
 This project use @mui/material version 5.16.14 
 
-### "@reduxjs/toolkit"
+### @reduxjs/toolkit
 
 This project use @reduxjs/toolkit version 2.5.1
 
-### "cra-template"
+### cra-template
 
 This project use cra-tamplate version 1.2.0
 
-### "localforage"
+### localforage
 
 This project use localforage version 1.10.0
 
-### "minimal-ui"
+### minimal-ui
 
 This project use minimal-ui version 1.0.0
 
-### "react"
+### react
 
 This project use react version 19.0.0
 
-### "react-dom"
+### react-dom
 
 This project use react-dom version 19.0.0
 
-### "react-redux"
+### react-redux
 
 This project use react-redux version 9.2.0
 
-### "react-router-dom"
+### react-router-dom
 
 This project use rreact-router-dom version 7.1.5
 
-### "react-scripts"
+### react-scripts
 
 This project use react-scripts version 5.0.1
 
-### "redux-persist"
+### redux-persist
 
 This project use redux-persist version 6.0.0
 
-### "redux-toolkit"
+### redux-toolkit
 
 This project use @mui/material version 1.1.2

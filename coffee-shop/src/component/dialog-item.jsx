@@ -66,7 +66,7 @@ const DialogItem = (props) => {
       setName(value);
     } else if (type === "qty") {
       if (value === "" || /^[0-9]*$/.test(value)) {
-        setQty(value);
+        setQty(Number(value));
         setError("");
       } else {
         setError(...error, { qty: "Qty must greater than 0" });
@@ -75,7 +75,7 @@ const DialogItem = (props) => {
       setUOM(value);
     } else if (type === "price") {
       if (value === "" || /^[0-9]*$/.test(value)) {
-        setPrice(value);
+        setPrice(Number(value));
         setError("");
       } else {
         setError(...error, { price: "Qty must greater than 0" });

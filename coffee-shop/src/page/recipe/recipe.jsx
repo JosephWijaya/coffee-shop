@@ -104,7 +104,9 @@ const Recipe = () => {
   };
 
   const submit = () => {
-    if (stock.some((num) => num <= 0)) {
+    const filter = stock.filter((data, idx) => data < used[idx]);
+    console.log(filter);
+    if (stock.some((num) => num <= 0 || filter.length > 0)) {
       alert("Insufficient Stock!");
     } else {
       let arrRecipe = [],
@@ -288,7 +290,9 @@ const Recipe = () => {
               {data?.map((row, idx) => (
                 <StyledTableRow key={row.idx}>
                   <StyledTableCell>{name[idx]}</StyledTableCell>
-                  <StyledTableCell align="right">{Math.round(stock[idx])}</StyledTableCell>
+                  <StyledTableCell align="right">
+                    {Math.round(stock[idx])}
+                  </StyledTableCell>
                   <StyledTableCell align="right">
                     <TextField
                       required
